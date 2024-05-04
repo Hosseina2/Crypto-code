@@ -1,0 +1,27 @@
+#pip install pycryptodome
+
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
+# Key for encryption (16, 24, or 32 bytes long)
+key = get_random_bytes(16)
+
+# Initialization Vector (IV) for encryption (16 bytes long)
+iv = get_random_bytes(16)
+
+# Create AES cipher object
+cipher = AES.new(key, AES.MODE_CBC, iv)
+
+# Message to be encrypted
+message = b'Hello, World!'
+
+# Encrypt the message
+ct_bytes = cipher.encrypt(message)
+
+# Decrypt the message
+decipher = AES.new(key, AES.MODE_CBC, iv)
+pt = decipher.decrypt(ct_bytes)
+
+print("Original message:", message)
+print("Encrypted message:", ct_bytes)
+print("Decrypted message:", pt)
