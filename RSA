@@ -1,0 +1,15 @@
+from Crypto.PublicKey import RSA
+
+# تولید جفت کلید RSA با طول 2048 بیت
+key = RSA.generate(2048)
+
+# دریافت کلید خصوصی و عمومی
+private_key = key.export_key()
+public_key = key.publickey().export_key()
+
+# چاپ کلید خصوصی و عمومی
+print("Private Key:")
+print(private_key.decode())
+print("\nPublic Key:")
+print(public_key.decode())
+#END
