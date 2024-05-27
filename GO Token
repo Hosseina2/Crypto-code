@@ -1,0 +1,31 @@
+package main
+
+import (
+ "fmt"
+ "github.com/dgrijalva/jwt-go"
+ "time"
+)
+
+func main() {
+ // تعریف کلید مخفی برای امضای توکن
+ mySigningKey := []byte("secret")
+
+ // تعریف اطلاعات کاربر یا داده‌های دیگر که می‌خواهید در توکن قرار دهید
+ claims := jwt.MapClaims{
+  "username": "john_doe",
+  "exp":      time.Now().Add(time.Hour * 24).Unix(), // زمان انقضای توکن (یک روز)
+ }
+
+ // ایجاد توکن با استفاده از کلید مخفی و اطلاعات تعریف شده
+ token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+ // امضای توکن و تبدیل به رشته
+ tokenString, err := token.SignedString(mySigningKey)
+ if err != nil {
+  fmt.Println("خطا در امضای توکن:", err)
+  return
+ }
+
+ fmt.Println("توکن JWT ایجاد شده:")
+ fmt.Println(tokenString)
+}
