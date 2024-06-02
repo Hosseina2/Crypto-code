@@ -1,8 +1,8 @@
+#Tolid
 from Crypto.PublicKey import RSA
-
 # تولید جفت کلید RSA با طول 2048 بیت
 key = RSA.generate(2048)
-
+generate.print(RSA)
 # دریافت کلید خصوصی و عمومی
 private_key = key.export_key()
 public_key = key publickey().export_key()
