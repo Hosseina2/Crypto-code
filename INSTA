@@ -1,0 +1,52 @@
+pip install requests
+    import requests
+import json
+
+class InstagramAPI:
+    BASE_URL = "https://www.instagram.com"
+
+    def __init__(self, username):
+        self.username = username
+
+    def get_profile_info(self):
+        url = f"{self.BASE_URL}/{self.username}/?__a=1"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            user_info = data["graphql"]["user"]
+            print("Username:", user_info["username"])
+            print("Full Name:", user_info["full_name"])
+            print("Followers:", user_info["edge_followed_by"]["count"])
+            print("Following:", user_info["edge_follow"]["count"])
+        else:
+            print("Failed to retrieve profile information.")
+
+    def get_recent_posts(self, count=5):
+        url = f"{self.BASE_URL}/{self.username}/?__a=1"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            edge_owner_to_timeline_media = data["graphql"]["user"]["edge_owner_to_timeline_media"]
+            posts = edge_owner_to_timeline_media["edges"][:count]
+            print("Recent Posts:")
+            for post in posts:
+                print("Post URL:", f"{self.BASE_URL}/p/{post['node']['shortcode']}/")
+
+    # این تابع باید به‌روزرسانی شود تا بتوانید پست جدید ارسال کنید
+    def create_post(self, caption, image_path):
+        print("Creating a new post...")
+        # ارسال پست با تصویر و توضیحات
+
+if __name__ == "__main__":
+    # تست کارکرد توابع
+    username = "instagram_username"
+    api = InstagramAPI(username)
+
+    print("Profile Information:")
+    api.get_profile_info()
+
+    print("\nRecent Posts:")
+    api.get_recent_posts(count=3)
+
+    # ارسال یک پست جدید
+    # api.create_post(caption="This is a test post.", image_path="path_to_image.jpg")
