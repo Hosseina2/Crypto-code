@@ -1,5 +1,5 @@
-pip install requests
-    import requests
+#Insta
+import requests
 import json
 
 class InstagramAPI:
@@ -50,3 +50,4 @@ if __name__ == "__main__":
 
     # ارسال یک پست جدید
     # api.create_post(caption="This is a test post.", image_path="path_to_image.jpg")
+pip install requests
