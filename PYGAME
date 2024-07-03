@@ -1,0 +1,89 @@
+#PINGPONG
+import pygame
+import random
+
+# تنظیمات بازی
+WIDTH = 800
+HEIGHT = 600
+BALL_RADIUS = 20
+PADDLE_WIDTH = 10
+PADDLE_HEIGHT = 100
+PADDLE_SPEED = 10
+BALL_SPEED_X = 7
+BALL_SPEED_Y = 7
+
+# رنگ‌ها
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# ایجاد پنجره‌ی بازی
+pygame.init()
+window = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Ping Pong")
+
+# متغیرهای مربوط به توپ و دسته‌ها
+ball_x = WIDTH // 2
+ball_y = HEIGHT // 2
+ball_dx = BALL_SPEED_X * random.choice((1, -1))
+ball_dy = BALL_SPEED_Y * random.choice((1, -1))
+paddle1_y = (HEIGHT - PADDLE_HEIGHT) // 2
+paddle2_y = (HEIGHT - PADDLE_HEIGHT) // 2
+
+# تابع برای رسم توپ و دسته‌ها
+def draw_objects():
+    window.fill(BLACK)
+    pygame.draw.rect(window, WHITE, (0, paddle1_y, PADDLE_WIDTH, PADDLE_HEIGHT))
+    pygame.draw.rect(window, WHITE, (WIDTH - PADDLE_WIDTH, paddle2_y, PADDLE_WIDTH, PADDLE_HEIGHT))
+    pygame.draw.circle(window, WHITE, (ball_x, ball_y), BALL_RADIUS)
+
+# حرکت دسته‌ها
+def move_paddles():
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w] and paddle1_y > 0:
+        paddle1_y -= PADDLE_SPEED
+    if keys[pygame.K_s] and paddle1_y < HEIGHT - PADDLE_HEIGHT:
+        paddle1_y += PADDLE_SPEED
+    if keys[pygame.K_UP] and paddle2_y > 0:
+        paddle2_y -= PADDLE_SPEED
+    if keys[pygame.K_DOWN] and paddle2_y < HEIGHT - PADDLE_HEIGHT:
+        paddle2_y += PADDLE_SPEED
+
+# حرکت توپ
+def move_ball():
+    global ball_x, ball_y, ball_dx, ball_dy
+    ball_x += ball_dx
+    ball_y += ball_dy
+
+    # برخورد توپ با دسته‌ها و دیوارها
+    if ball_y - BALL_RADIUS <= 0 or ball_y + BALL_RADIUS >= HEIGHT:
+        ball_dy *= -1
+    if ball_x - BALL_RADIUS <= PADDLE_WIDTH and paddle1_y <= ball_y <= paddle1_y + PADDLE_HEIGHT:
+        ball_dx *= -1
+    if ball_x + BALL_RADIUS >= WIDTH - PADDLE_WIDTH and paddle2_y <= ball_y <= paddle2_y + PADDLE_HEIGHT:
+        ball_dx *= -1
+
+    # تصمیم گیری درباره برنده شدن یا ادامه بازی
+    if ball_x - BALL_RADIUS <= 0 or ball_x + BALL_RADIUS >= WIDTH:
+        reset_ball()
+
+# تابع برای شروع مجدد بازی
+def reset_ball():
+    global ball_x, ball_y, ball_dx, ball_dy
+    ball_x = WIDTH // 2
+    ball_y = HEIGHT // 2
+    ball_dx = BALL_SPEED_X * random.choice((1, -1))
+    ball_dy = BALL_SPEED_Y * random.choice((1, -1))
+
+# حلقه‌ی اصلی بازی
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    move_paddles()
+    move_ball()
+    draw_objects()
+    pygame.display.update()
+
+pygame.quit()
